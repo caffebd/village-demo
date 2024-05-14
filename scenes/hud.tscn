@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://blaai4vbhrlk5"]
+
+[ext_resource type="FontFile" uid="uid://duirhuy7klyp8" path="res://assets/fonts/alagard.ttf" id="1_6rmwd"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_vwhdw"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vwhdw")
+
+[node name="FPS" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -88.0
+offset_top = 32.0
+offset_right = -21.0
+offset_bottom = 70.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("1_6rmwd")
+theme_override_font_sizes/font_size = 40
+text = "123"

@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://ds8jitdfn8yuj"]
+
+[ext_resource type="PackedScene" uid="uid://vxbaxc3ocw8c" path="res://assets/imported/path.glb" id="1_dmm70"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b2kq3"]
+
+[node name="path" instance=ExtResource("1_dmm70")]
+
+[node name="BezierCurve" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_b2kq3")
