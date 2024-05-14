@@ -1,10 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://qgbj73vixll4"]
+[gd_scene load_steps=13 format=3 uid="uid://qgbj73vixll4"]
 
 [ext_resource type="Shader" path="res://assets/materials/shaderMat/screenEffect1.gdshader" id="1_0voym"]
-[ext_resource type="PackedScene" uid="uid://hxhq06jds1l0" path="res://assets/landscape.tscn" id="1_1q8b1"]
 [ext_resource type="PackedScene" uid="uid://ds8jitdfn8yuj" path="res://assets/path.tscn" id="2_7n3rm"]
 [ext_resource type="PackedScene" uid="uid://bvvre0p6auulq" path="res://scenes/world.tscn" id="2_kcl2j"]
+[ext_resource type="PackedScene" uid="uid://df623wi4323mu" path="res://scenes/father_test.tscn" id="4_ik3vd"]
+[ext_resource type="PackedScene" uid="uid://dplf8d8w78la4" path="res://assets/environment&lights.tscn" id="6_efe2g"]
 [ext_resource type="PackedScene" uid="uid://btdf8my7v3yqn" path="res://scenes/log.tscn" id="6_n54h1"]
+[ext_resource type="Script" path="res://scripts/climbed_mound.gd" id="8_4rnxs"]
+[ext_resource type="PackedScene" uid="uid://1r0ah5m40y1d" path="res://scenes/SittingLog.tscn" id="8_my4o7"]
 [ext_resource type="PackedScene" uid="uid://doxkrnuvvwqhc" path="res://assets/PlayerChild.tscn" id="14_k0c81"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yuxdl"]
@@ -17,32 +20,92 @@ shader_parameter/bottom_strenth = 3.0
 radius = 0.309
 height = 1.7
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_1fo8h"]
+size = Vector3(2.59, 0.565, 0.65)
+
 [node name="village" type="Node3D"]
 
 [node name="screenEffect" type="ColorRect" parent="."]
+visible = false
 material = SubResource("ShaderMaterial_yuxdl")
-offset_left = -209.0
-offset_top = -116.0
-offset_right = 1610.0
-offset_bottom = 922.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
 
 [node name="World" parent="." instance=ExtResource("2_kcl2j")]
 
-[node name="landscape" parent="." instance=ExtResource("1_1q8b1")]
-
 [node name="path" parent="." instance=ExtResource("2_7n3rm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.48973, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.240359, 0)
+visible = false
 
 [node name="characterRef" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.2142, 0.442353, 39.5166)
 visible = false
 mesh = SubResource("CapsuleMesh_12480")
 
+[node name="Father" parent="." node_paths=PackedStringArray("check_points", "clearing_check_points", "player", "top_mound_marker") instance=ExtResource("4_ik3vd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.1918, 1.51539, -186.061)
+check_points = [NodePath("../FatherCheckPoints/Check0"), NodePath("../FatherCheckPoints/Check1"), NodePath("../FatherCheckPoints/Check2"), NodePath("../FatherCheckPoints/Check3"), NodePath("../FatherCheckPoints/CheckEnd")]
+clearing_check_points = [NodePath("../FatherCheckPointsClearing/CheckM0"), NodePath("../FatherCheckPointsClearing/CheckM1"), NodePath("../FatherCheckPointsClearing/CheckM2"), NodePath("../FatherCheckPointsClearing/CheckM3")]
+player = NodePath("../PlayerChild")
+top_mound_marker = NodePath("../DadTopMound")
+
 [node name="PlayerChild" parent="." node_paths=PackedStringArray("attack_marker", "rotate_marker", "lunge_marker") instance=ExtResource("14_k0c81")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.791, 2.32981, -187.841)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.3775, 2.44286, -183.737)
 attack_marker = NodePath("Head/PlayerCam/AttackMarker")
 rotate_marker = NodePath("RotateMarker")
 lunge_marker = NodePath("Head/PlayerCam/LungeMarker")
 
 [node name="Log" parent="." instance=ExtResource("6_n54h1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.9791, 1.42125, -190.986)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.3256, 1.42125, -191.833)
+
+[node name="environment" parent="." instance=ExtResource("6_efe2g")]
+
+[node name="DadTopMound" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.8298, 2.32622, -194.865)
+
+[node name="FatherCheckPoints" type="Node3D" parent="."]
+
+[node name="Check0" type="Marker3D" parent="FatherCheckPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.5289, 1.39323, -186.416)
+
+[node name="Check1" type="Marker3D" parent="FatherCheckPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.0269, 1.50794, -185.488)
+
+[node name="Check2" type="Marker3D" parent="FatherCheckPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -54.1908, 1.50794, -185.488)
+
+[node name="Check3" type="Marker3D" parent="FatherCheckPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.3796, 1.50794, -184.182)
+
+[node name="CheckEnd" type="Marker3D" parent="FatherCheckPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60.2998, 1.67154, -187.716)
+
+[node name="SittingLog" parent="." instance=ExtResource("8_my4o7")]
+transform = Transform3D(0.00462511, 0, 0.999989, 0, 1, 0, -0.999989, 0, 0.00462511, -58.0621, 8.50151, -228.693)
+
+[node name="FatherCheckPointsClearing" type="Node3D" parent="."]
+
+[node name="CheckM0" type="Marker3D" parent="FatherCheckPointsClearing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.5723, 3.35706, -197.044)
+
+[node name="CheckM1" type="Marker3D" parent="FatherCheckPointsClearing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60.4529, 7.4084, -208.495)
+
+[node name="CheckM2" type="Marker3D" parent="FatherCheckPointsClearing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -58.7341, 8.56267, -228.288)
+
+[node name="CheckM3" type="Marker3D" parent="FatherCheckPointsClearing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57.7509, 8.50916, -229.664)
+
+[node name="ClimbedMound" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.8277, 2.80572, -194.124)
+script = ExtResource("8_4rnxs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ClimbedMound"]
+shape = SubResource("BoxShape3D_1fo8h")
+
+[connection signal="body_entered" from="ClimbedMound" to="ClimbedMound" method="_on_body_entered"]

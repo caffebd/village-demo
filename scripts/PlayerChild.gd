@@ -52,7 +52,8 @@ var can_warp: bool = true
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	#camera.current = false
+	head.rotation_degrees.y = 90.0
+
 
 
 

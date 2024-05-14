@@ -1,5 +1,8 @@
 extends Node
 
+signal dad_to_mound()
+signal dad_to_clearing()
+
 signal time_transition_0
 signal time_transition_1
 signal time_transition_2
