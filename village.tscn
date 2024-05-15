@@ -1,10 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://qgbj73vixll4"]
+[gd_scene load_steps=10 format=3 uid="uid://qgbj73vixll4"]
 
 [ext_resource type="Shader" path="res://assets/materials/shaderMat/screenEffect1.gdshader" id="1_0voym"]
-[ext_resource type="PackedScene" uid="uid://hxhq06jds1l0" path="res://assets/landscape.tscn" id="1_1q8b1"]
 [ext_resource type="PackedScene" uid="uid://ds8jitdfn8yuj" path="res://assets/path.tscn" id="2_7n3rm"]
 [ext_resource type="PackedScene" uid="uid://bvvre0p6auulq" path="res://scenes/world.tscn" id="2_kcl2j"]
 [ext_resource type="PackedScene" uid="uid://btdf8my7v3yqn" path="res://scenes/log.tscn" id="6_n54h1"]
+[ext_resource type="PackedScene" uid="uid://dplf8d8w78la4" path="res://assets/environment&lights.tscn" id="6_vmcty"]
 [ext_resource type="PackedScene" uid="uid://doxkrnuvvwqhc" path="res://assets/PlayerChild.tscn" id="14_k0c81"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_yuxdl"]
@@ -17,9 +17,12 @@ shader_parameter/bottom_strenth = 3.0
 radius = 0.309
 height = 1.7
 
+[sub_resource type="SphereMesh" id="SphereMesh_f5qr2"]
+
 [node name="village" type="Node3D"]
 
 [node name="screenEffect" type="ColorRect" parent="."]
+visible = false
 material = SubResource("ShaderMaterial_yuxdl")
 offset_left = -209.0
 offset_top = -116.0
@@ -28,10 +31,9 @@ offset_bottom = 922.0
 
 [node name="World" parent="." instance=ExtResource("2_kcl2j")]
 
-[node name="landscape" parent="." instance=ExtResource("1_1q8b1")]
-
 [node name="path" parent="." instance=ExtResource("2_7n3rm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.48973, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.42695, 0)
+visible = false
 
 [node name="characterRef" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.2142, 0.442353, 39.5166)
@@ -39,10 +41,16 @@ visible = false
 mesh = SubResource("CapsuleMesh_12480")
 
 [node name="PlayerChild" parent="." node_paths=PackedStringArray("attack_marker", "rotate_marker", "lunge_marker") instance=ExtResource("14_k0c81")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.791, 2.32981, -187.841)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7096, 0.690032, 45.5402)
 attack_marker = NodePath("Head/PlayerCam/AttackMarker")
 rotate_marker = NodePath("RotateMarker")
 lunge_marker = NodePath("Head/PlayerCam/LungeMarker")
 
 [node name="Log" parent="." instance=ExtResource("6_n54h1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.9791, 1.42125, -190.986)
+
+[node name="environment" parent="." instance=ExtResource("6_vmcty")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(6.4643, 0, 0, 0, 6.4643, 0, 0, 0, 6.4643, -22.5359, 4.86675, -542.095)
+mesh = SubResource("SphereMesh_f5qr2")
