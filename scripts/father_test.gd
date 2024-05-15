@@ -6,6 +6,9 @@ extends CharacterBody3D
 
 @export var top_mound_marker: Marker3D
 
+
+@export var sitting_log: Node3D
+
 var use_check_points: Array[Marker3D]
 
 var target_position: Vector3 #set this to the target coordinate
@@ -39,6 +42,7 @@ var to_mound: bool = true
 func _ready() -> void:
 	GlobalSignals.dad_to_mound.connect(_dad_to_mound)
 	GlobalSignals.dad_to_clearing.connect(_dad_to_clearing)
+	GlobalSignals.start_clearing.connect(_start_clearing)
 	use_check_points = check_points
 	$AnimationPlayer.play("mixamo_com")
 	$AnimationPlayer.pause()
@@ -46,6 +50,13 @@ func _ready() -> void:
 	_next_position()
 	_update_tree()
 	#GlobalSignals.emit_signal("dad_to_mound")
+
+func _start_clearing():
+	walking = false
+	global_position = sitting_log.global_position
+	global_position.y -= 0.2
+	_sit_down()
+	
 
 func _dad_to_mound():
 	walking = false

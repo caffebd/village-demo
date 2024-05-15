@@ -3,6 +3,10 @@ extends Node
 signal dad_to_mound()
 signal dad_to_clearing()
 
+signal start_clearing()
+
+signal  stick_drop()
+
 signal time_transition_0
 signal time_transition_1
 signal time_transition_2

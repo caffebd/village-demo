@@ -26,11 +26,16 @@ var constant_wobble:bool = false
 @onready var ray: RayCast3D = %PlayerRay
 @onready var player_hand = %Hand
 @onready var head = %Head
-
-
+@onready var hud = %Hud
 
 @export var wobble_head:bool = true
 
+@export var start_clearing_marker: Marker3D
+
+@export var throwForce = 0.3
+@export var followSpeed = 10.0
+@export var followDistance = 0.8
+@export var maxDistanceFromCamera = 5.0
 
 var use_cursor: bool = false
 
@@ -48,14 +53,18 @@ var lean_weight = 0.05
 
 var can_warp: bool = true
 
+var heldObject: RigidBody3D
+
 #end head wobble settings
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	GlobalSignals.start_clearing.connect(_start_clearing)
 	head.rotation_degrees.y = 90.0
 
 
-
+func _start_clearing():
+	global_position = start_clearing_marker.global_position
 
 							
 func _input(event):
@@ -86,8 +95,15 @@ func _take_action():
 
 func _physics_process(delta):
 	# Add the gravity.
+	
+	handle_holding_objects()
+	
+	_hud_target()
+	
 	if not is_on_floor():
 		velocity.y -= gravity * delta
+
+
 
 	# Handle jump.
 	#if Input.is_action_just_pressed("ui_accept") and is_on_floor():
@@ -103,7 +119,6 @@ func _physics_process(delta):
 	var result = space_state.intersect_ray(query)
 	
 	
-	
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 	
@@ -111,6 +126,7 @@ func _physics_process(delta):
 		var collider = ray.get_collider()
 		if collider != null:
 			print (collider.name)
+
 			if collider.get_parent().is_in_group("log"):
 				print ("is log")
 				var object = collider.get_parent()
@@ -152,6 +168,55 @@ func _physics_process(delta):
 
 	move_and_slide()
 
+
+func _hud_target():
+	var collider = ray.get_collider()
+	if collider != null:
+		if collider.is_in_group("highlight"):
+			hud.target.modulate = Color(1,1,1,1)
+		else:
+			hud.target.modulate = Color(1,1,1,0.2)	
+	else:
+		hud.target.modulate = Color(1,1,1,0.2)	
+func set_held_object(body):
+	if body is RigidBody3D:
+		heldObject = body
+		heldObject.held = true
+	
+func drop_held_object():
+	heldObject = null
+	
+func throw_held_object():
+	var obj = heldObject
+	heldObject.held = false
+	drop_held_object()
+	obj.apply_central_impulse(-camera.global_basis.z * throwForce * 10)
+	
+func handle_holding_objects():
+	# Throwing Objects
+	if Input.is_action_just_pressed("throw"):
+		if heldObject != null: throw_held_object()
+		
+	# Dropping Objects
+	if Input.is_action_just_pressed("use"):
+		if heldObject != null: drop_held_object()
+		elif ray.is_colliding(): set_held_object(ray.get_collider())
+		
+	# Object Following
+	if heldObject != null:
+		var targetPos = camera.global_transform.origin + (camera.global_basis * Vector3(0.25, -0.25, -followDistance)) # 2.5 units in front of camera
+		#var targetPos = %HoldPosition.global_transform.origin
+		var objectPos = heldObject.global_transform.origin # Held object position
+		
+		heldObject.linear_velocity = (targetPos - objectPos) * followSpeed # Our desired position
+		heldObject.rotation_degrees.z = 90.0
+		# Drop the object if it's too far away from the camera
+		if heldObject.global_position.distance_to(camera.global_position) > maxDistanceFromCamera:
+			drop_held_object()
+			
+		# Drop the object if the player is standing on it (must enable dropBelowPlayer and set a groundRay/RayCast3D below the player)
+		#if dropBelowPlayer && groundRay.is_colliding():
+			#if groundRay.get_collider() == heldObject: drop_held_object()
 
 func _headbob(time)->Vector3:
 	var pos = Vector3.ZERO
