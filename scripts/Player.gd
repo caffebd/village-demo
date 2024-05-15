@@ -48,13 +48,18 @@ var lean_weight = 0.05
 
 var can_warp: bool = true
 
+@export var start_clearing_marker: Marker3D
+
 #end head wobble settings
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	GlobalSignals.start_clearing.connect(_start_clearing)
+	
 	#camera.current = false
 
-
+func _start_clearing():
+	global_position = start_clearing_marker.global_position
 
 							
 func _input(event):
